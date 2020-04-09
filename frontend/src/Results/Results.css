@@ -1,0 +1,29 @@
+.resultsContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.resultsWrapper{
+    display: flex;
+    flex-direction: column;
+}
+.playerControls{
+    display: flex;
+    flex-direction: column;
+
+  }
+
+
+@keyframes example {
+    50%  {font-size: 150px;}
+}
+
+.result{
+    font-size: 100px;
+    animation-name: example;
+    animation-duration: 1s;
+}
+
+  

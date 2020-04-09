@@ -1,0 +1,36 @@
+.gameContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.weapon {
+    padding: 10px;
+    border: none;
+    background: none;
+}
+
+.playerControls{
+    display: flex;
+    flex-direction: column;
+
+  }
+
+.enemyWeapon{
+    filter: blur(40px);
+    -webkit-filter: blur(8px);
+}
+
+
+@keyframes example {
+    50%  {font-size: 150px;}
+}
+
+.timer{
+    font-size: 100px;
+    animation-name: example;
+    animation-duration: 1s;
+}
+
+  
