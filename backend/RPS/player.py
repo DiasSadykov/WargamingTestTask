@@ -10,6 +10,9 @@ class Player(object):
         self.game = game
 
     def takeAction(self, action):
+        """
+        Handles players action and changes game state
+        """
         if action == 'Ready':
             self.ready = True
         else:
@@ -20,5 +23,8 @@ class Player(object):
         self.ready = False
 
     def endGame(self):
+        """
+        Detaches player from the game
+        """
         self.game = None
         self.ready = False

@@ -16,11 +16,17 @@ class Game(object):
         self.playerQueue = playerQueue
 
     async def startGame(self):
+        """
+        Starts game by notifying clients with message
+        """
         self.player1.action, self.player2.action = None, None
         await self.sendMessage(self.player1, json.dumps({'status':'game is started'}))
         await self.sendMessage(self.player2, json.dumps({'status':'game is started'}))
 
     async def stopGame(self):
+        """
+        Stops game and appends players back to the game manager's queue
+        """
         await self.sendMessage(self.player1, json.dumps({'status':'game is ended'}))
         await self.sendMessage(self.player2, json.dumps({'status':'game is ended'}))
         self.player1.ready, self.player2.ready = False, False
@@ -32,9 +38,15 @@ class Game(object):
         del self.games[self.player2]
 
     async def sendMessage(self, player, msg):
+        """
+        Sends message to the player
+        """
         await player.ws.send_str(msg)
 
     def changeState(self, action):
+        """
+        Handles state change in the game
+        """
         print(action, self._state)
         if action in ['Rock', 'Scissors','Paper'] and self._state == State.STARTED and self.player1.action and self.player2.action:
             print('move was seen')
@@ -52,6 +64,9 @@ class Game(object):
             self.timeout()
 
     def play(self):
+        """
+        Sends results of the game to the clients
+        """
         result = self.round()
         self.player1.endRound()
         self.player1.endRound()
@@ -59,6 +74,9 @@ class Game(object):
         self.app.loop.create_task(self.sendMessage(self.player2,json.dumps(result)))
 
     def round(self):
+        """
+        Composes result message
+        """
         if self.player1.action == self.player2.action:
             result = {"draw":True, "winner": None}
         else:
@@ -72,6 +90,9 @@ class Game(object):
         return result
 
     def getWinner(self):
+        """
+        Gets winner from the players actions
+        """
         if self.player1.action == "Timeout": return self.player2
         if self.player2.action == "Timeout": return self.player1
         
@@ -84,6 +105,9 @@ class Game(object):
         return results[(self.player1.action,self.player2.action)]
 
     def timeout(self):
+        """
+        Handles players timeout
+        """
         if self.player1.action == "Timeout" and self.player2.action == "Timeout":
            self.changeState('Stop')
         elif self.player1.action and self.player2.action :

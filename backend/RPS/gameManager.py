@@ -16,6 +16,11 @@ class GameManager(object):
         app.loop.create_task(self.matchPlayers())
 
     async def websocket_handler(self, request):
+        """
+        Websocket message handler, redirects requests
+        to login function and logout function, 
+        handles user inputs
+        """
         ws = aiohttp.web.WebSocketResponse()
         await ws.prepare(request)
         async for msg in ws:
@@ -32,12 +37,19 @@ class GameManager(object):
 
 
     async def matchPlayers(self):
+        """
+        Worker for matching players. Imitates delay for mathcing players
+        by sleeping for 0.1 seconds.
+        """
         while True:
             await asyncio.sleep(0.1)
             if len(self.playerQueue) > 1:
                 await self.createGame()
 
     async def createGame(self):
+        """
+        Creates game sessions, when two players are available
+        """
         player1 = self.playerQueue.popleft()
         player2 = self.playerQueue.popleft()
         game = Game(player1, player2, self.app, self.playerQueue, self.games)
@@ -49,6 +61,9 @@ class GameManager(object):
         return game
 
     async def connectPlayer(self, name, ws):
+        """
+        Connects player to the game manager and appends it to queue
+        """
         if name not in self.usernames:
             self.usernames.add(name)
             new_player = Player(name, ws)
@@ -61,6 +76,10 @@ class GameManager(object):
             return None
 
     async def disconnect(self, ws):
+        """
+        Handles disconnects by ending the current game session and
+        removing the player from player queue
+        """
         if ws in self.players:
             playerToLeave = self.players[ws]
             if playerToLeave in self.games:
